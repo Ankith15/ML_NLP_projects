@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder, LabelEncoder
 from sklearn.preprocessing import StandardScaler
+import pickle
 
 df = pd.read_csv('Purchase_Behavior\purchase_history.csv')
 # print(df.head())
@@ -21,4 +22,8 @@ scaler = StandardScaler()
 df[['Age','Salary','Price']] = scaler.fit_transform(df[['Age','Salary','Price']])
 new_df = df
 print(new_df.head())
+
+with open('Purchase_Behavior\scaler.pkl','wb') as f:
+    pickle.dump(scaler,f)
+
 # new_df.to_csv('Purchase_data.csv')
