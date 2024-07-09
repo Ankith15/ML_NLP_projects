@@ -47,4 +47,3 @@ if st.button("Predict"):
     else:
         st.warning('Customer will not purchase the item')
 
-st.write("To run this app, use the command: `streamlit run app.py`")
