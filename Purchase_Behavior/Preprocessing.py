@@ -26,4 +26,9 @@ print(new_df.head())
 with open('Purchase_Behavior\scaler.pkl','wb') as f:
     pickle.dump(scaler,f)
 
+with open('Purchase_Behavior\ohe.pkl','wb') as f:
+    pickle.dump(Encoded,f)
+    
+with open('Purchase_Behavior\LE.pkl','wb') as f:
+    pickle.dump(le,f)
 # new_df.to_csv('Purchase_data.csv')
