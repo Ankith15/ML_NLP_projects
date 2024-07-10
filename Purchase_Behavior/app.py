@@ -25,20 +25,21 @@ Gender = st.selectbox('Gender', ['Male', 'Female'])
 
 if st.button("Predict"):
     input_data = pd.DataFrame([[Age, Salary, Product_ID, Price, Gender]], 
-                              columns=['Age', 'Salary', 'Product_ID', 'Price', 'Gender'])
+                              columns=['Age', 'Salary', 'Product ID', 'Price', 'Gender'])
     
     input_data[['Age', 'Salary', 'Price']] = scaler.transform(input_data[['Age', 'Salary', 'Price']])
     
-    gender_encoded = ohe.transform(input_data[['Gender']]).toarray()
-    gender_encoded_df = pd.DataFrame(gender_encoded, index=input_data.index)
+    gender_binary = 1 if Gender == "Male" else 0
+    gender_encoded_df = pd.DataFrame([[gender_binary]], columns=['Gender_Male'])
     
-    product_id_encoded = le.transform(input_data['Product_ID'])
+    product_id_encoded = le.transform(input_data['Product ID'])
+    product_id_encoded_df = pd.DataFrame(product_id_encoded, columns=['Product_ID'], index=input_data.index)
     
-    input_data = input_data.drop(columns=['Gender', 'Product_ID'])
-    input_data = pd.concat([input_data, gender_encoded_df], axis=1)
-    input_data['Product_ID'] = product_id_encoded
+    input_data = input_data.drop(columns=['Gender', 'Product ID'])
     
-    input_data = input_data.values
+    input_data = pd.concat([input_data, gender_encoded_df, product_id_encoded_df], axis=1)
+    
+    input_data = input_data[['Age', 'Salary', 'Price', 'Gender_Male', 'Product_ID']]
     
     prediction = mod.predict(input_data)
     
@@ -46,4 +47,3 @@ if st.button("Predict"):
         st.success('Customer will purchase the item')
     else:
         st.warning('Customer will not purchase the item')
-
