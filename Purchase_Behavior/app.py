@@ -12,9 +12,6 @@ with open('Purchase_Behavior/scaler.pkl', 'rb') as f:
 with open('Purchase_Behavior/LE.pkl', 'rb') as f:
     le = pickle.load(f)
 
-with open('Purchase_Behavior/ohe.pkl', 'rb') as f:
-    ohe = pickle.load(f)
-
 st.title('Understanding the purchase behavior')
 
 Age = st.number_input('Age', min_value=0, max_value=100, value=25)
@@ -33,13 +30,14 @@ if st.button("Predict"):
     gender_encoded_df = pd.DataFrame([[gender_binary]], columns=['Gender_Male'])
     
     product_id_encoded = le.transform(input_data['Product ID'])
-    product_id_encoded_df = pd.DataFrame(product_id_encoded, columns=['Product_ID'], index=input_data.index)
+    product_id_encoded_df = pd.DataFrame(product_id_encoded, columns=['Product ID'], index=input_data.index)
     
     input_data = input_data.drop(columns=['Gender', 'Product ID'])
     
     input_data = pd.concat([input_data, gender_encoded_df, product_id_encoded_df], axis=1)
     
-    input_data = input_data[['Age', 'Salary', 'Price', 'Gender_Male', 'Product_ID']]
+    # Ensure the order of columns matches the training data
+    input_data = input_data[['Age', 'Salary', 'Product ID', 'Price', 'Gender_Male']]
     
     prediction = mod.predict(input_data)
     
