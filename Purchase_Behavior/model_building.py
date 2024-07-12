@@ -1,4 +1,4 @@
-import pandas as pd 
+import pandas as pd
 import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegression
@@ -6,27 +6,36 @@ from sklearn.metrics import accuracy_score
 from sklearn.model_selection import cross_val_score
 import pickle
 
-df = pd.read_csv('Purchase_Behavior\Purchase_data.csv')
-df.drop(columns=['Unnamed: 0','Customer ID'],inplace=True)
-# print(df.head(5))
+class ModelBuilding:
+    def __init__(self, data_path):
+        self.df = pd.read_csv(data_path)
+        self.model = LogisticRegression()
+        
+    def preprocess_data(self):
+        self.df.drop(columns=['Unnamed: 0', 'Customer ID'], inplace=True)
+        self.X = self.df.drop(columns=['Purchased'])
+        self.y = self.df['Purchased']
 
-x = df.drop(columns=['Purchased'])
-print(x.head())
-y = df['Purchased']
-# print(y.head())
+    def train_test_split(self, test_size=0.2, random_state=78):
+        self.X_train, self.X_test, self.y_train, self.y_test = train_test_split(self.X, self.y, test_size=test_size, random_state=random_state)
+    
+    def build_model(self):
+        self.model.fit(self.X_train, self.y_train)
+        
+    def evaluate_model(self):
+        y_pred = self.model.predict(self.X_test)
+        accuracy = accuracy_score(self.y_test, y_pred)
+        cross_val_accuracy = np.mean(cross_val_score(self.model, self.X, self.y, cv=5))
+        return accuracy, cross_val_accuracy
 
-x_train,x_test,y_train,y_test= train_test_split(x,y,test_size=0.2, random_state=78)
-print(x_test.shape)
+    def save_model(self, filepath):
+        with open(filepath, 'wb') as f:
+            pickle.dump(self.model, f)
 
-
-# Model building
-
-lr =  LogisticRegression()
-lr.fit(x_train,y_train)
-y_pred = lr.predict(x_test)
-print (accuracy_score(y_test,y_pred))
-print(np.mean(cross_val_score(lr,x,y,cv=5)))
-
-
-with open('Purchase_Behavior\model.pkl','wb') as f:
-    pickle.dump(lr,f)
+model_builder = ModelBuilding('Purchase_Behavior/Purchase_data.csv')
+model_builder.preprocess_data()
+model_builder.train_test_split()
+model_builder.build_model()
+accuracy, cross_val_accuracy = model_builder.evaluate_model()
+print(f"Accuracy: {accuracy}, Cross-Validation Accuracy: {cross_val_accuracy}")
+model_builder.save_model('Purchase_Behavior/model.pkl')
