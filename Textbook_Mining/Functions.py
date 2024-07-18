@@ -1,6 +1,9 @@
 import nltk
 import PyPDF2
 from nltk.tokenize import sent_tokenize
+from sklearn.mixture import GaussianMixture
+from transformers import GPTSw3Tokenizer,GPT3Model
+
 
 def extract_text(pdfs):
     all_text = ""
@@ -40,3 +43,17 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 def embed_chunks(chunks):
     embeddings = model.encode(chunks, convert_to_tensor=True)
     return embeddings
+
+
+
+def raptor_indexing(embeddings,chunks):
+    gmm = GaussianMixture(n_components=10,covariance_type='full',random_state=56)
+    gmm.fit(embeddings)
+    labels = gmm.predict(embeddings)
+    
+    summaries = []
+
+    for cluster in range(10):
+        cluster_texts = [chunks[i] for i in range(len(chunks)) if labels[i] ==cluster]
+        summary = 
+        
