@@ -3,6 +3,8 @@ import PyPDF2
 from nltk.tokenize import sent_tokenize
 from sklearn.mixture import GaussianMixture
 from transformers import GPTSw3Tokenizer,GPT3Model
+from transformers import BartTokenizer, BartForConditionalGeneration
+
 
 
 def extract_text(pdfs):
@@ -45,6 +47,21 @@ def embed_chunks(chunks):
     return embeddings
 
 
+bart_model = BartForConditionalGeneration.from_pretrained('facebook/bart-large-cnn')
+bart_tokenizer = BartTokenizer.from_pretrained('facebook/bart-large-cnn')
+
+def bart_summarize(texts):
+    full_text = " ".join(texts)
+    
+    inputs = bart_tokenizer.encode("summarize: " + full_text, return_tensors="pt", max_length=1024, truncation=True)
+    
+    summary_ids = bart_model.generate(inputs, max_length=150, min_length=30, length_penalty=2.0, num_beams=4, early_stopping=True)
+    
+    summary = bart_tokenizer.decode(summary_ids[0], skip_special_tokens=True)
+    return summary
+
+
+
 
 def raptor_indexing(embeddings,chunks):
     gmm = GaussianMixture(n_components=10,covariance_type='full',random_state=56)
@@ -55,5 +72,8 @@ def raptor_indexing(embeddings,chunks):
 
     for cluster in range(10):
         cluster_texts = [chunks[i] for i in range(len(chunks)) if labels[i] ==cluster]
-        summary = 
-        
+        summary = bart_summarize(cluster_texts)
+        summaries.append(summary)
+    
+    summary_embeddings = model.encode(summaries,convert_to_tensor=True)
+    return summaries,summary_embeddings

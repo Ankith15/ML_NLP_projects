@@ -1,5 +1,5 @@
 import PyPDF2
-from Functions import chunk_text, extract_text
+from Functions import chunk_text, extract_text, embed_chunks,raptor_indexing
 
 
 pdf_files = [
@@ -10,9 +10,11 @@ pdf_files = [
 
 extracted_text = extract_text(pdf_files)
 
-print(extracted_text)
-
-
+chunks = chunk_text(extract_text)
+embeddings = embed_chunks(chunks)
+summaries,summary_embeddings = raptor_indexing(embeddings,chunks)
+print(summaries)
+print(summary_embeddings)
 
 
 
