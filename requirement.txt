@@ -5,3 +5,4 @@ streamlit
 PyPDF2
 nltk
 sentence_transformers
+sentence_transformers
