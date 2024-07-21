@@ -77,3 +77,7 @@ def raptor_indexing(embeddings,chunks):
     
     summary_embeddings = model.encode(summaries,convert_to_tensor=True)
     return summaries,summary_embeddings
+
+def insert_embeddings(collection, embeddings):
+    ids = [i for i in range(len(embeddings))]
+    collection.insert([ids, embeddings])
