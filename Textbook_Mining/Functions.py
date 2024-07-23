@@ -90,3 +90,5 @@ def insert_embeddings(collection, embeddings):
 example_embeddings = np.random.rand(10, 384).tolist()
 
 # insert_embeddings(collection, example_embeddings)
+
+
