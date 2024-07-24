@@ -3,7 +3,7 @@ import numpy as np
 import PyPDF2
 from nltk.tokenize import sent_tokenize
 from sklearn.mixture import GaussianMixture
-from transformers import GPTSw3Tokenizer,GPT3Model
+from transformers import GPTSw3Tokenizer
 from transformers import BartTokenizer, BartForConditionalGeneration
 
 
@@ -82,13 +82,12 @@ def raptor_indexing(embeddings,chunks):
 def insert_embeddings(collection, embeddings):
     ids = [i for i in range(len(embeddings))]
     collection.insert([ids, embeddings])
-def insert_embeddings(collection, embeddings):
-    ids = [i for i in range(len(embeddings))]
-    collection.insert([ids, embeddings])
+
 
 # Example embeddings (Replace with actual embeddings)
-example_embeddings = np.random.rand(10, 384).tolist()
+# example_embeddings = np.random.rand(10, 384).tolist()
 
 # insert_embeddings(collection, example_embeddings)
+
 
 
