@@ -13,8 +13,8 @@ extracted_text = extract_text(pdf_files)
 chunks = chunk_text(extract_text)
 embeddings = embed_chunks(chunks)
 summaries,summary_embeddings = raptor_indexing(embeddings,chunks)
-print(summaries)
-print(summary_embeddings)
+# print(summaries)
+# print(summary_embeddings)
 
 
 
